@@ -2,18 +2,27 @@ using Microsoft.AspNetCore.Mvc;
 using QuizMgmtWeb.Data;
 using QuizMgmtWeb.Models;
 using System.Linq;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace QuizMgmtWeb.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]")]
     public class QuizMgmtController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public QuizMgmtController(AppDbContext context)
+        public QuizMgmtController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // POST: api/QuizMgmt/login
@@ -32,19 +41,47 @@ namespace QuizMgmtWeb.Controllers
                 return Unauthorized(new { message = "Invalid email or password." });
             }
 
-            var userDetails = new
+            // Generate JWT Token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                user.UserId,
-                user.FirstName,
-                user.LastName,
-                user.Email,
-                user.Role
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                    new Claim(ClaimTypes.Name, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role)
+                }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            return Ok(new { message = "Login successful.", user = userDetails });
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return Ok(new
+            {
+                user = new
+                {
+                    user.UserId,
+                    user.FirstName,
+                    user.LastName,
+                    user.Email,
+                    user.Role
+                },
+                token = tokenString
+            });
+        }
+
+        // POST: api/QuizMgmt/logout
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            return Ok(new { message = "Logged out successfully." });
         }
 
         // GET: api/QuizMgmt
+        [Authorize]
         [HttpGet]
         public IActionResult GetAllQuizzes()
         {
@@ -52,87 +89,20 @@ namespace QuizMgmtWeb.Controllers
             return Ok(quizzes);
         }
 
-        // GET: api/QuizMgmt/{id}
-        [HttpGet("{id}")]
-        public IActionResult GetQuizById(int id)
-        {
-            var quiz = _context.Quizzes.Find(id);
 
-            if (quiz == null)
+        // GET: api/QuizMgmt/auth/token
+        [HttpGet("auth/token")]
+        public IActionResult GetToken()
+        {
+            var token = Request.Cookies["jwt"];
+            if (string.IsNullOrEmpty(token))
             {
-                return NotFound(new { message = "Quiz not found." });
+                return Unauthorized(new { message = "No token found in cookies." });
             }
 
-            return Ok(quiz);
+            return Ok(new { token });
         }
 
-        // POST: api/QuizMgmt
-        [HttpPost]
-        public IActionResult CreateQuiz([FromBody] Quiz quiz)
-        {
-            _context.Quizzes.Add(quiz);
-            _context.SaveChanges();
-            return Ok(new { message = "Quiz created successfully.", quiz });
-        }
 
-        // PUT: api/QuizMgmt/{id}
-        [HttpPut("{id}")]
-        public IActionResult UpdateQuiz(int id, [FromBody] Quiz updatedQuiz)
-        {
-            var quiz = _context.Quizzes.Find(id);
-
-            if (quiz == null)
-            {
-                return NotFound(new { message = "Quiz not found." });
-            }
-
-            quiz.CategoryName = updatedQuiz.CategoryName;
-            quiz.MarksObtained = updatedQuiz.MarksObtained;
-            quiz.TotalMarks = updatedQuiz.TotalMarks;
-            quiz.StartTime = updatedQuiz.StartTime;
-            quiz.EndTime = updatedQuiz.EndTime;
-
-            _context.SaveChanges();
-            return Ok(new { message = "Quiz updated successfully.", quiz });
-        }
-
-        // DELETE: api/QuizMgmt/{id}
-        [HttpDelete("{id}")]
-        public IActionResult DeleteQuiz(int id)
-        {
-            var quiz = _context.Quizzes.Find(id);
-
-            if (quiz == null)
-            {
-                return NotFound(new { message = "Quiz not found." });
-            }
-
-            _context.Quizzes.Remove(quiz);
-            _context.SaveChanges();
-            return Ok(new { message = "Quiz deleted successfully." });
-        }
-
-        // POST: api/QuizMgmt/submit
-        [HttpPost("submit")]
-        public IActionResult SubmitQuiz([FromBody] Submission submission)
-        {
-            var quiz = _context.Quizzes.Find(submission.QuizID);
-
-            if (quiz == null)
-            {
-                return NotFound(new { message = "Quiz not found." });
-            }
-
-            // Copy quiz details to submission
-            submission.TotalMarks = quiz.TotalMarks;
-            submission.MarksObtained = quiz.MarksObtained;
-            submission.StartTime = quiz.StartTime;
-            submission.EndTime = quiz.EndTime;
-
-            _context.Submissions.Add(submission);
-            _context.SaveChanges();
-
-            return Ok(new { message = "Quiz submission saved successfully.", submission });
-        }
     }
 }
