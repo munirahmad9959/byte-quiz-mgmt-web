@@ -7,33 +7,35 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './state';
 import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
-import storage from 'redux-persist/lib/storage'; // Defaults to localStorage for web
+import storage from 'redux-persist/lib/storage'; 
 
-// Configure Redux Persist
+
 const persistConfig = {
-    key: 'root', // Key to save the persisted state
-    storage,     // Use localStorage
+    key: 'root', 
+    storage,    
 };
 
-// Create a persisted reducer
 const persistedReducer = persistReducer(persistConfig, authReducer);
 
-// Create the Redux store and configure middleware
 const store = configureStore({
     reducer: {
         auth: persistedReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: {
-            ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'], // Ignore persist actions
+            ignoredActions: [
+                'persist/PERSIST', 
+                'persist/REHYDRATE', 
+                'persist/PURGE', 
+                'persist/REGISTER',
+            ], 
         },
     }),
 });
 
-// Create the persistor
+
 const persistor = persistStore(store);
 
-// Render the application
 createRoot(document.getElementById('root')).render(
     <StrictMode>
         <Provider store={store}>

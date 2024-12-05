@@ -1,35 +1,27 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setLogout } from "../state"; // Import the logout action
-import persistor from "../main"; // Import the persistor for Redux persist
+import { setLogout } from "../state";
+import persistor from "../main";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Dashboard = () => {
-  const dispatch = useDispatch(); // Initialize dispatch
-  const user = useSelector((state) => state.auth.user); // Get user data from Redux state
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
   // Logout function
   const handleLogout = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:5027/api/QuizMgmt/logout",
-        {},
-        { withCredentials: true } // Ensures cookies are included
-      );
-      
-      console.log("Logout successful:", response.data);
-  
-      // Clear Redux state and persist storage
+      await axios.post("https://localhost:7093/api/Auth/logout");
       dispatch(setLogout());
-      await persistor.purge(); // Ensure persistence is cleared
-      navigate("/"); // Redirect to the login page
+      await persistor.purge();
+      navigate("/login", {replace: true});
     } catch (error) {
-      console.error("Error logging out:", error.response?.data || error.message);
+      console.error("Logout failed:", error.message);
     }
   };
-  
+
   return (
     <>
       {/* Navbar */}
@@ -125,7 +117,11 @@ const Dashboard = () => {
       <div className="p-4 sm:ml-64 mt-16">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
           <div className="text-lg text-gray-800 font-bold">
-            Welcome, {user.FirstName || "User"}!
+            {user ? (
+              <h1>Welcome, {user.firstName + " " + user.lastName}!</h1>
+            ) : (
+              <h1>Welcome, Guest!</h1>
+            )}
           </div>
         </div>
       </div>

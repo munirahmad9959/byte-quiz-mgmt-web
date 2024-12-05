@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace QuizMgmtWeb.Models
+﻿namespace backend.Models
 {
     public class Quiz
     {

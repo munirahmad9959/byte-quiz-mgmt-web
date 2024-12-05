@@ -1,4 +1,4 @@
-﻿namespace QuizMgmtWeb.Models
+﻿namespace backend.Models
 {
     public class Question
     {
@@ -10,5 +10,4 @@
         public string Options { get; set; }  // JSON format
         public string CorrectAnswer { get; set; }
     }
-
 }

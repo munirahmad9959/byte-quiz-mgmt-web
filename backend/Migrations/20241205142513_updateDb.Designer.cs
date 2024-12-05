@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using QuizMgmtWeb.Data;
+using backend.Data;
 
 #nullable disable
 
-namespace QuizMgmtWeb.Migrations
+namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241205142513_updateDb")]
+    partial class updateDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace QuizMgmtWeb.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ProjectQMSWpf.Models.Category", b =>
+            modelBuilder.Entity("backend.Models.Category", b =>
                 {
                     b.Property<int>("CategoryID")
                         .ValueGeneratedOnAdd()
@@ -39,7 +42,37 @@ namespace QuizMgmtWeb.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("ProjectQMSWpf.Models.Quiz", b =>
+            modelBuilder.Entity("backend.Models.Question", b =>
+                {
+                    b.Property<int>("QuestionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionID"));
+
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CorrectAnswer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Options")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("QuestionText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("QuestionID");
+
+                    b.HasIndex("CategoryID");
+
+                    b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("backend.Models.Quiz", b =>
                 {
                     b.Property<int>("QuizID")
                         .ValueGeneratedOnAdd()
@@ -78,7 +111,7 @@ namespace QuizMgmtWeb.Migrations
                     b.ToTable("Quizzes");
                 });
 
-            modelBuilder.Entity("ProjectQMSWpf.Models.Submission", b =>
+            modelBuilder.Entity("backend.Models.Submission", b =>
                 {
                     b.Property<int>("SubmissionID")
                         .ValueGeneratedOnAdd()
@@ -122,7 +155,7 @@ namespace QuizMgmtWeb.Migrations
                     b.ToTable("Submissions");
                 });
 
-            modelBuilder.Entity("ProjectQMSWpf.Models.User", b =>
+            modelBuilder.Entity("backend.Models.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -142,7 +175,7 @@ namespace QuizMgmtWeb.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -161,43 +194,24 @@ namespace QuizMgmtWeb.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Question", b =>
+            modelBuilder.Entity("backend.Models.Question", b =>
                 {
-                    b.Property<int>("QuestionID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.HasOne("backend.Models.Category", "Category")
+                        .WithMany("Questions")
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QuestionID"));
-
-                    b.Property<int>("CategoryID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CorrectAnswer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Options")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QuestionText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("QuestionID");
-
-                    b.HasIndex("CategoryID");
-
-                    b.ToTable("Questions");
+                    b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("ProjectQMSWpf.Models.Quiz", b =>
+            modelBuilder.Entity("backend.Models.Quiz", b =>
                 {
-                    b.HasOne("ProjectQMSWpf.Models.Category", null)
+                    b.HasOne("backend.Models.Category", null)
                         .WithMany("Quizzes")
                         .HasForeignKey("CategoryID");
 
-                    b.HasOne("ProjectQMSWpf.Models.User", "User")
+                    b.HasOne("backend.Models.User", "User")
                         .WithMany("Quizzes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -206,21 +220,21 @@ namespace QuizMgmtWeb.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProjectQMSWpf.Models.Submission", b =>
+            modelBuilder.Entity("backend.Models.Submission", b =>
                 {
-                    b.HasOne("ProjectQMSWpf.Models.Category", "Category")
+                    b.HasOne("backend.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectQMSWpf.Models.Quiz", "Quiz")
+                    b.HasOne("backend.Models.Quiz", "Quiz")
                         .WithMany()
                         .HasForeignKey("QuizID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectQMSWpf.Models.User", "User")
+                    b.HasOne("backend.Models.User", "User")
                         .WithMany("Submissions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -233,25 +247,14 @@ namespace QuizMgmtWeb.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Question", b =>
-                {
-                    b.HasOne("ProjectQMSWpf.Models.Category", "Category")
-                        .WithMany("Questions")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("ProjectQMSWpf.Models.Category", b =>
+            modelBuilder.Entity("backend.Models.Category", b =>
                 {
                     b.Navigation("Questions");
 
                     b.Navigation("Quizzes");
                 });
 
-            modelBuilder.Entity("ProjectQMSWpf.Models.User", b =>
+            modelBuilder.Entity("backend.Models.User", b =>
                 {
                     b.Navigation("Quizzes");
 

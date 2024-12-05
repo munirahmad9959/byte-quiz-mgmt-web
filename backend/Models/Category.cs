@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace QuizMgmtWeb.Models
+﻿namespace backend.Models
 {
     public class Category
     {

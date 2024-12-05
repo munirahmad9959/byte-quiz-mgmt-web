@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace QuizMgmtWeb.Models
+﻿namespace backend.Models
 {
     public class Submission
     {
@@ -28,6 +22,5 @@ namespace QuizMgmtWeb.Models
 
         // Optionally store the answered questions in a serialized format (JSON, for example)
         public string AnsweredQuestions { get; set; }  // Store answers as JSON or another format
-
     }
 }
