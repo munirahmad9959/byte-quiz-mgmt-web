@@ -16,7 +16,7 @@ const Navbar = () => {
         //     </div>
         // </div>
 
-        <div className='bg-white top-0 sticky z-[999]'>
+        <div className='bg-white sticky left-0 top-0 z-[999]'>
             <div className='flex justify-between items-center h-[90px] max-w-full mr-10 ml-3'>
                 <div className="flex items-center space-x-5">
                     <img src="./images/logo.svg" alt="logo" className=" max-w-[800px]" />
@@ -26,7 +26,7 @@ const Navbar = () => {
                         <a href="#about" className="text-[#090909] hover:text-[#8854c0] transition duration-300 hover:bg-[#efe5ff] px-4 py-3 rounded-lg">Plans</a>
                         <a href="#services" className="text-[#090909] hover:text-[#8854c0] transition duration-300 hover:bg-[#efe5ff] px-4 py-3 rounded-lg">Solutions</a>
                         <a href="#contact" className="text-[#090909] hover:text-[#8854c0] transition duration-300 hover:bg-[#efe5ff] px-4 py-3 rounded-lg">Resources</a>
-                        <a href="#contact" className="text-[#090909] hover:text-[#8854c0] transition duration-300 hover:bg-[#efe5ff] px-4 py-3 rounded-lg">For Business</a>
+                        <a href="#contact" className="text-[#090909] hover:text-[rgb(136,84,192)] transition duration-300 hover:bg-[#efe5ff] px-4 py-3 rounded-lg">For Business</a>
                     </div>
                 </div>
 
