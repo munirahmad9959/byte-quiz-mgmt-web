@@ -2,21 +2,23 @@ import React from 'react';
 
 const Footer = () => {
   return (
+
+    // https://cdn.prod.website-files.com/60aca2b71ab9a5e4ececf1cf/62fa6419161d3a641f681ceb_Logo.svg
     <footer className="bg-gray-100 text-gray-700 mt-10">
       <div className="container mx-auto py-8 px-4">
         <div className="flex flex-wrap justify-between items-start">
-          <div className="w-full md:w-1/3 space-y-4">
-            <a href="https://quizizz.com/?lng=en" className="inline-block">
+          <div className="w-full md:w-1/3 space-y-4 relative">
+            <a href="/" className="inline-block">
               <img
-                src="https://cdn.prod.website-files.com/60aca2b71ab9a5e4ececf1cf/62fa6419161d3a641f681ceb_Logo.svg"
+                src="./images/byteQuiz.png"
                 alt="Quizizz Logo"
-                className="h-10"
+                className="w-[200px] absolute left-[-40px] top-0"
               />
             </a>
             <a
               href="https://support.quizizz.com/hc/en-us/articles/360055566272-Quizizz-Accessibility-and-Inclusion-Statement"
               target="_blank" rel="noopener noreferrer"
-              className="flex items-center space-x-2 text-sm"
+              className="flex items-center space-x-2 text-sm absolute left-0 top-[120px]"
             >
               <img
                 src="https://cdn.prod.website-files.com/60aca2b71ab9a5e4ececf1cf/64a3c543f0df3bde4580f844_Accessibility_Icon.webp"
@@ -29,10 +31,10 @@ const Footer = () => {
 
           <div className="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="space-y-2">
-              <a href="https://quizizz.com/blog?lng=en" className="block hover:underline">The Quizizz Blog</a>
+              <a href="https://quizizz.com/blog?lng=en" className="block hover:underline">The ByteQuiz Blog</a>
               <a href="https://quizizz.com/resources?lng=en" className="block hover:underline">Teacher Resources</a>
               <a href="https://quizizz.com/home/state-test-prep?lng=en" className="block hover:underline">State Test Prep</a>
-              <a href="https://quizizz.com/quizizzforwork?source=home_footer&amp;lng=en" className="block hover:underline">Quizizz for Work</a>
+              <a href="https://quizizz.com/quizizzforwork?source=home_footer&amp;lng=en" className="block hover:underline">ByteQuiz for Work</a>
               <a href="https://quizizz.zendesk.com/hc/en-us" className="block hover:underline">Help Center</a>
             </div>
 
@@ -45,7 +47,7 @@ const Footer = () => {
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2">Download Quizizz Apps</h3>
+              <h3 className="font-semibold mb-2">Download ByteQuiz App</h3>
               <div className="flex space-x-4">
                 <a
                   href="https://share.quizizz.com/EBAH8OlhCM"
@@ -76,7 +78,7 @@ const Footer = () => {
 
         <div className="mt-8 border-t border-gray-300 pt-4 flex flex-col sm:flex-row justify-between items-center">
           <div className="space-y-1 text-center sm:text-left">
-            <p className="text-sm">1. 2021 survey of 800+ teachers conducted by Quizizz</p>
+            <p className="text-sm">1. 2021 survey of 800+ teachers conducted by ByteQuiz</p>
             <p className="text-sm">
               2. Journal of Education and e-Learning Research
               <a

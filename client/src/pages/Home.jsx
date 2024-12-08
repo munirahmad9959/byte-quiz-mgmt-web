@@ -157,7 +157,7 @@ const Home = () => {
       </div>
 
       {/* Testimonial Section */}
-      <div className="flex w-screen justify-center space-x-7 mb-12">
+      <div className="flex w-screen justify-center space-x-7">
         <div className="card w-[324px] h-[341px] rounded-lg mt-28 border-2 border-[#2d9da6]"
           style={{
             boxShadow: '-7px 7px 0px 0px #2D9DA6',
@@ -172,8 +172,8 @@ const Home = () => {
             </div>
           </div>
           <div className="Details w-[250px] mx-auto mt-3">
-            <span className='text-[#2d9da6]'>"Just today, I was able to use an already created Quizizz</span>
-            <p> on slope-intercept form to see if my students were ready for their summative assessment on Thursday .... Because of the data from the Quizizz, I was able to support and meet the needs of these students.”</p>
+            <span className='text-[#2d9da6]'>"Just today, I was able to use an already created ByteQuiz</span>
+            <p> on slope-intercept form to see if my students were ready for their summative assessment on Thursday .... Because of the data from the ByteQuiz, I was able to support and meet the needs of these students.”</p>
           </div>
         </div>
 
@@ -191,7 +191,7 @@ const Home = () => {
             </div>
           </div>
           <div className="Details w-[250px] mx-auto mt-3">
-            <p>“I had a visually impaired student in distance learning .... <span className='text-[#efa929]'>With Quizizz, I was able to keep him on track</span> ... and he successfully moved to the next course of accelerated math with all the foundational pieces in place that he needed to know!”</p>
+            <p>“I had a visually impaired student in distance learning .... <span className='text-[#efa929]'>With ByteQuiz, I was able to keep him on track</span> ... and he successfully moved to the next course of accelerated math with all the foundational pieces in place that he needed to know!”</p>
           </div>
         </div>
 
@@ -214,8 +214,10 @@ const Home = () => {
         </div>
       </div>
 
+      {/* After testimal grid background */}
+
       <div
-        className="lastSection flex w-[85vw] mt-12 mx-auto bg-[#E2D1FF] h-[380px] rounded-3xl">
+        className="lastSection flex w-[85vw] mt-20 mx-auto bg-[#E2D1FF] h-[380px] rounded-3xl">
         <div className="left w-[70vw] pt-[80px] pl-[80px] h-full">
           <div className="heading text-[40px] leading-[1.35] font-[500]">Start adapting your curriculum in minutes.</div>
           <p className='text-[20px] leading-[156%]'>The best way to create, adapt, and deliver resources differentiated for every student.</p>

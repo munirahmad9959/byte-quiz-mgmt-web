@@ -14,13 +14,13 @@ const HeroSection = () => {
             </div>
 
             {/* Center Text */}
-            <div className="text-center max-w-[50vw] mx-auto z-10 mt-20">
+            <div className="text-center max-w-[50vw] mx-auto z-10 mt-40">
                 <span className="text-4xl font-normal text-[#090909] mb-4 mr-2">
                     Introducing
                 </span>
                 <span className='text-[#ae7dd9] text-4xl font-semibold'>Instructional Suite</span>
                 <p className="text-6xl font-bold text-[#090909] italic my-2">
-                    "I had no idea Quizizz could do that."
+                    "I had no idea ByteQuiz could do that."
                 </p>
                 <p className="text-[22px] text-[#666]">- Almost everybody</p>
                 <span className="spacer block h-[1px] border border-gray-300 w-[50vw] mx-auto mt-4"></span>
