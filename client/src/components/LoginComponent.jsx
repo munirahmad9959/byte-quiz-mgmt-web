@@ -37,7 +37,7 @@ const LoginComponent = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-indigo-300 mt-14">
+        <div className="flex items-center justify-center min-h-screen bg-[#461A42] mt-14">
             <div className="logincard flex max-w-4xl w-full rounded-2xl overflow-hidden shadow-lg">
                 {/* Left Side with Image */}
                 <div className="w-1/2">
@@ -99,7 +99,7 @@ const LoginComponent = () => {
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
+                            className="w-full bg-[#8854c0] text-white py-2 rounded-lg hover:bg-[#6a3da5] focus:ring-4 focus:ring-blue-300"
                         >
                             Submit
                         </button>
@@ -111,14 +111,15 @@ const LoginComponent = () => {
                         <div className="flex justify-center space-x-4">
                             <button
                                 type="button"
-                                className="flex items-center justify-center w-full bg-white text-gray-600 py-2 focus:ring-4 focus:ring-red-300 rounded-full border border-gray-600 shadow-md"
+                                className="flex items-center justify-center w-full bg-white text-gray-600 py-2 focus:ring-4 focus:ring-red-300 rounded-full border border-gray-600 shadow-md hover:bg-[#efe5ff]"
                             >
                                 <FcGoogle className="mr-2 text-xl" />
                                 Google
                             </button>
                             <button
                                 type="button"
-                                className="flex items-center justify-center w-full bg-white text-gray-600 py-2 focus:ring-4 focus:ring-blue-300 rounded-full border border-gray-600 shadow-md"
+                                className="flex items-center justify-center w-full bg-white text-gray-600 py-2 focus:ring-4 focus:ring-blue-300 rounded-full border border-gray-600 shadow-md
+                                hover:bg-[#efe5ff]"
                             >
                                 <FaFacebook className="mr-2 text-blue-700 text-xl" />
                                 Facebook
