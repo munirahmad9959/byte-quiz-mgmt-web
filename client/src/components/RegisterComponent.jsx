@@ -29,6 +29,7 @@ const RegisterComponent = () => {
             setLoading(false)
         } catch (error) {
             console.error(`Error from RegistrationForm: ${error}`);
+            setLoading(false);
         }
     }
 
