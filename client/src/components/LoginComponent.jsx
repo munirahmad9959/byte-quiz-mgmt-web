@@ -22,14 +22,7 @@ const LoginComponent = () => {
 
             alert("Login successful! and the token is " + response.data.token);
 
-            const userRole = response.data.user.role;
-            if (userRole === "Teacher") {
-                navigate('/');
-            } else if (userRole === "Student") {
-                navigate('/');
-            } else {
-                navigate('/');
-            }
+            navigate('/dashboard');
         } catch (error) {
             console.error('Login error:', error);
             alert(error.response?.data?.message || 'Login failed! Please try again.');

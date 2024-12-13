@@ -4,20 +4,23 @@ import { useSelector } from "react-redux";
 import LoginPage from "./pages/LoginPage";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import QuizPage from "./pages/QuizPage";
 
 const App = () => {
   const isAuth = Boolean(useSelector((state) => state.auth.token));
-  console.log("Token is 10:46pm:", useSelector((state) => state.auth.token));
+  console.log("Token", useSelector((state) => state.auth.token));
   console.log("Is Auth:", isAuth);
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/dashboard" element={isAuth ? <Dashboard /> : <Navigate to="/login" />} /> */}
+        <Route path="/dashboard" element={isAuth ? <Dashboard /> : <Navigate to="/login" />} />
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/take-quiz" element={isAuth ? <QuizPage/> : <Navigate to="/login"/>} />
+        <Route path="/take-quiz" element={<QuizPage />} />
         <Route path="*" element={<Navigate to={isAuth ? "/" : "/login"} />} />
       </Routes>
     </BrowserRouter>

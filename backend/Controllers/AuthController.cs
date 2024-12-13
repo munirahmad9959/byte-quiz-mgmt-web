@@ -77,6 +77,7 @@ namespace backend.Controllers
         [HttpPost("logout")]
         public IActionResult Logout()
         {
+            Console.WriteLine("Logout Called");
             // For stateless JWTs, inform the client to delete the token locally
             return Ok(new { message = "Logout successful. Please remove the token from your client-side storage." });
         }
@@ -86,7 +87,8 @@ namespace backend.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim("UserID", user.UserId.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Token").Value));
