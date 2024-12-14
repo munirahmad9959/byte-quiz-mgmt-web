@@ -13,70 +13,82 @@ const StudentDashboard = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
 
     const handleQuizClick = () => {
-        console.log('Selected category:', selectedCategory);
-        navigate('/take-quiz');
-    }
-
-    const fetchData = async () => {
-        try {
-            // Check if token exists
-            if (!token) {
-                console.error("User is not authenticated");
-                return;
-            }
-            const response = await axios.get('https://localhost:7093/api/Quiz/user', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Accept: 'text/plain',
-                },
-            });
-            if (response.status === 200) {
-                setQuizData(response.data.data);
-                setFilteredData(response.data.data);
-            } else {
-                console.error("Failed to fetch quiz data");
-            }
-        } catch (error) {
-            console.log(`Error from student dashboard with message is: ${error.message}`);
+        if (selectedCategory !== 'Choose a subject' && selectedCategory !== '') {
+            axios
+                .get(`https://localhost:7093/api/Quiz/category`, {
+                    params: { categoryName: selectedCategory },
+                    headers: { Authorization: `Bearer ${token}`, Accept: 'text/plain' },
+                })
+                .then((response) => {
+                    const quizQuestions = response.data.data;
+                    if (quizQuestions.length !== 0) {
+                        const category = categories.find((cat) => cat.name === selectedCategory);
+                        navigate('/take-quiz', {
+                            state: {
+                                quizData: quizQuestions,
+                                categoryID: category?.categoryID,
+                                categoryName: selectedCategory,
+                            },
+                        });
+                    } else {
+                        alert('No questions available for this category');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error.response ? error.response.data : error.message);
+                });
+        } else {
+            alert('Please select a subject to take quiz first!');
         }
     };
 
+    const fetchData = async () => {
+        try {
+            if (!token) {
+                console.error('User is not authenticated');
+                return;
+            }
+            const response = await axios.get('https://localhost:7093/api/Quiz/user', {
+                headers: { Authorization: `Bearer ${token}`, Accept: 'text/plain' },
+            });
+            if (response.status === 200) {
+                setQuizData(response.data.data);
+                setFilteredData(response.data.data); // Initialize filtered data
+            } else {
+                console.error('Failed to fetch quiz data');
+            }
+        } catch (error) {
+            console.error(`Error fetching quiz data: ${error.message}`);
+        }
+    };
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get(
-                'https://localhost:7093/api/Quiz/categories',
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: 'text/plain',
-                    },
-                }
-            );
-
+            const response = await axios.get('https://localhost:7093/api/Quiz/categories', {
+                headers: { Authorization: `Bearer ${token}`, Accept: 'text/plain' },
+            });
             if (response.status === 200) {
-                // Extract the data array from the response
-                setCategories(response.data.data); // Updated to access the `data` property
-                console.log('Categories:', response.data.data); // Updated log statement
+                setCategories(response.data.data);
             } else {
                 console.error('Failed to fetch categories');
             }
         } catch (error) {
-            console.log(`Error fetching categories: ${error.message}`);
+            console.error(`Error fetching categories: ${error.message}`);
         }
     };
+
+    // Filter logic
+    useEffect(() => {
+        const filtered = quizData.filter((record) =>
+            record.categoryName.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredData(filtered);
+    }, [searchTerm, quizData]);
 
     useEffect(() => {
         fetchData();
         fetchCategories();
     }, [token]);
-
-    // useEffect(() => {
-    //     const filtered = quizData.filter((record) =>
-    //         record.topic.toLowerCase().includes(searchTerm.toLowerCase())
-    //     );
-    //     setFilteredData(filtered);
-    // }, [searchTerm, quizData]);
 
     return (
         <>
@@ -93,12 +105,12 @@ const StudentDashboard = () => {
                     {categories.length > 0 &&
                         categories.map((category) => (
                             <option key={category.categoryID} value={category.name}>
-                                {category.name} {/* Updated to use category.name */}
+                                {category.name}
                             </option>
                         ))}
                 </select>
 
-                <button className="bg-[#8854C0] text-white px-5 py-2 rounded-xl" onClick={handleQuizClick}>
+                <button className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-5 py-2 rounded-xl" onClick={handleQuizClick}>
                     Take Quiz
                 </button>
             </div>
@@ -119,7 +131,6 @@ const StudentDashboard = () => {
                         <tr>
                             <th className="p-4 border">Quiz ID</th>
                             <th className="p-4 border">Topic</th>
-                            <th className="p-4 border">User Name</th>
                             <th className="p-4 border">Marks Obtained</th>
                             <th className="p-4 border">Total Marks</th>
                             <th className="p-4 border">Action</th>
@@ -129,21 +140,20 @@ const StudentDashboard = () => {
                         {filteredData.length > 0 ? (
                             filteredData.map((record) => (
                                 <tr key={record.id} className="hover:bg-gray-100">
-                                    <td className="p-4 border">{record.id}</td>
-                                    <td className="p-4 border">{record.topic}</td>
-                                    <td className="p-4 border">{record.userName}</td>
+                                    <td className="p-4 border">{record.quizID}</td>
+                                    <td className="p-4 border">{record.categoryName}</td>
                                     <td className="p-4 border">{record.marksObtained}</td>
                                     <td className="p-4 border">{record.totalMarks}</td>
                                     <td className="p-4 border text-center">
-                                        <button className="bg-red-500 text-white px-4 py-1 rounded">
-                                            Delete
+                                        <button className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-1 rounded">
+                                            Download Pdf
                                         </button>
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="6" className="p-4 text-center">
+                                <td colSpan="5" className="p-4 text-center">
                                     No records found
                                 </td>
                             </tr>
