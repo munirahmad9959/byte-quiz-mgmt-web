@@ -196,7 +196,7 @@ namespace backend.Controllers
 
 
         [HttpPost("record/submission")]
-        public IActionResult RecordSubmission([FromBody] SubmissionDto submission)
+        public async Task<IActionResult> RecordSubmission([FromBody] SubmissionDto submission)
         {
             Console.WriteLine("Record submission called");
             Console.WriteLine($"Submission received: {System.Text.Json.JsonSerializer.Serialize(submission)}");
@@ -222,7 +222,7 @@ namespace backend.Controllers
 
                 // Add submission to the database
                 _context.Submissions.Add(_submission);
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return Ok(new
                 {
                     message = "Quiz submission recorded successfully.",
