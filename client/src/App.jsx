@@ -15,11 +15,14 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/dashboard" element={isAuth ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/" element={isAuth ? <Navigate to='/dashboard' /> : <Home />} />
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={isAuth ? <Navigate to='/dashboard' /> : <LoginPage />} />
+        <Route path="/register" element={isAuth ? <Navigate to='/dashboard' /> : <RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/take-quiz" element={isAuth ? <QuizPage/> : <Navigate to="/login"/>} />
+        <Route path="/take-quiz" element={isAuth ? <QuizPage /> : <Navigate to="/login" />} />
         <Route path="/take-quiz" element={<QuizPage />} />
         <Route path="*" element={<Navigate to={isAuth ? "/" : "/login"} />} />
       </Routes>
