@@ -2,12 +2,10 @@ import React from 'react'
 import { useState } from 'react';
 import axios from 'axios';
 import { setLoading } from '../state';
-import { useNavigate } from 'react-router-dom';
 
 const RegisterComponent = () => {
 
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         FirstName: '',
         LastName: '',
@@ -29,7 +27,6 @@ const RegisterComponent = () => {
             const response = await axios.post('https://localhost:7093/api/Auth/register', formData);
             console.log(response.data);
             setLoading(false)
-            navigate('/login');
         } catch (error) {
             console.error(`Error from RegistrationForm: ${error}`);
             setLoading(false);

@@ -9,5 +9,4 @@ export default defineConfig({
       '/api': 'http://localhost:5027', // Forward API requests to the backend
     },
   },
-  base: './',
 });
