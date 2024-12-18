@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { FaFilter } from 'react-icons/fa';
+import jsPDF from 'jspdf';
+import { downloadPdf } from '../../utils';
 
 const TeacherDashboard = () => {
     const token = useSelector((state) => state.auth.token);
@@ -45,16 +47,20 @@ const TeacherDashboard = () => {
         fetchData();
     }, [token]);
 
+    const handleDownloadPdf = async (quizID) => {
+        await downloadPdf(quizID, token);
+    };
+
     return (
         <>
             <div className="flex justify-between">
-                <h1 className="text-3xl font-semibold mb-4 text-[#2b2a2a]">Student Records</h1>
+                <h1 className="text-3xl font-semibold mb-4 text-[#2b2a2a]">Students Quizzes</h1>
                 <div className="mb-4 flex items-center space-x-2">
-                    <FaFilter  style={{
+                    <FaFilter style={{
                         fontSize: '1rem',
                         color: '#555',
                         cursor: 'pointer',
-                    }}/>
+                    }} />
                     <input
                         type="text"
                         placeholder="Search by username..."
@@ -87,7 +93,7 @@ const TeacherDashboard = () => {
                                     <td className="p-4 border">{record.marksObtained}</td>
                                     <td className="p-4 border">{record.totalMarks}</td>
                                     <td className="p-4 border text-center">
-                                        <button className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-1 rounded">
+                                        <button className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-1 rounded" onClick={() => handleDownloadPdf(record.quizID)}>
                                             Download Pdf
                                         </button>
                                     </td>

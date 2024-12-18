@@ -1,12 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { TiHome } from "react-icons/ti";
 import { FaBook, FaChartPie } from "react-icons/fa";
 import { SiGoogleclassroom } from "react-icons/si";
 import { BiDonateHeart } from "react-icons/bi";
 import { BsFillUnlockFill } from "react-icons/bs";
 import { IoIosAdd } from "react-icons/io";
+import { TbReport } from "react-icons/tb";
+import { TbBulbFilled } from "react-icons/tb";
 
-const DashboardSidebar = () => {
+const DashboardSidebar = ({ setCurrentView }) => {
+    const [activeLink, setActiveLink] = useState("Records");
+
+    const links = [
+        { name: "Records", icon: <TbReport style={{ fontSize: "1.2rem", marginRight: '5px' }} /> },
+        { name: "Add Quizzes", icon: <TbBulbFilled style={{ fontSize: "1rem", marginRight: '9px' }} /> },
+        { name: "Reports", icon: <FaChartPie style={{ fontSize: "1rem", marginRight: '9px' }} /> },
+        { name: "Classes", icon: <SiGoogleclassroom style={{ fontSize: "1rem", marginRight: '9px' }} /> },
+        { name: "Accomodations", icon: <BiDonateHeart style={{ fontSize: "1rem", marginRight: '9px' }} /> },
+    ];
+
     return (
         <>
             <aside className="w-64 bg-[#fff] text-white p-4 fixed h-full">
@@ -22,41 +34,21 @@ const DashboardSidebar = () => {
                     </div>
 
                     <div className="flex flex-col space-y-36">
-                        <ul className="text-[#666]">
-                            <li className="flex flex-col space-y-2 mt-5 justify-start">
-
-                                <div className="item flex items-center space-x-2 text-[16px] hover:bg-[#F6F0FF] p-2 rounded-xl hover:text-[#6A3DA5] cursor-pointer">
-                                    <span>
-                                        <TiHome style={{ fontSize: "1.2rem", marginRight: '5px' }} />
-                                    </span>
-                                    <a href="#" className=""> Explore</a>
-                                </div>
-
-                                <div className="item flex items-center space-x-2 text-[16px] hover:bg-[#F6F0FF] p-2 rounded-xl hover:text-[#6A3DA5] cursor-pointer">
-                                    <span>
-                                        <FaBook style={{ fontSize: "1rem", marginRight: '9px' }} />
-                                    </span>
-                                    <a href="#" className=""> Library</a>
-                                </div>
-                                <div className="item flex items-center space-x-2 text-[16px] hover:bg-[#F6F0FF] p-2 rounded-xl hover:text-[#6A3DA5] cursor-pointer">
-                                    <span>
-                                        <FaChartPie style={{ fontSize: "1rem", marginRight: '9px' }} />
-                                    </span>
-                                    <a href="#" className=""> Reports</a>
-                                </div>
-                                <div className="item flex items-center space-x-2 text-[16px] hover:bg-[#F6F0FF] p-2 rounded-xl hover:text-[#6A3DA5] cursor-pointer">
-                                    <span>
-                                        <SiGoogleclassroom style={{ fontSize: "1rem", marginRight: '9px' }} />
-                                    </span>
-                                    <a href="#" className=""> Classes</a>
-                                </div>
-                                <div className="item flex items-center space-x-2 text-[16px] hover:bg-[#F6F0FF] p-2 rounded-xl hover:text-[#6A3DA5] cursor-pointer">
-                                    <span>
-                                        <BiDonateHeart style={{ fontSize: "1rem", marginRight: '9px' }} />
-                                    </span>
-                                    <a href="#" className=""> Accomodations</a>
-                                </div>
-                            </li>
+                        <ul className="text-[#666] space-y-2 mt-5">
+                            {links.map((link) => (
+                                <li
+                                    key={link.name}
+                                    onClick={() => {
+                                        setActiveLink(link.name);
+                                        setCurrentView(link.name);
+                                    }}
+                                    className={`flex items-center space-x-2 text-[16px] p-2 rounded-xl cursor-pointer transition duration-200 ${activeLink === link.name ? "bg-[#F6F0FF] text-[#6A3DA5]" : "hover:bg-[#F6F0FF] hover:text-[#6A3DA5]"
+                                        }`}
+                                >
+                                    {link.icon}
+                                    <span>{link.name}</span>
+                                </li>
+                            ))}
                         </ul>
 
                         <div className="bottomElements w-full">
@@ -72,7 +64,7 @@ const DashboardSidebar = () => {
                 </div>
             </aside>
         </>
-    )
-}
+    );
+};
 
-export default DashboardSidebar
+export default DashboardSidebar;

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import { downloadPdf } from '../../utils';
 
 const StudentDashboard = () => {
     const navigate = useNavigate();
@@ -75,6 +77,10 @@ const StudentDashboard = () => {
         } catch (error) {
             console.error(`Error fetching categories: ${error.message}`);
         }
+    }; 
+
+    const handleDownloadPdf = async (quizID) => {
+        await downloadPdf(quizID, token);
     };
 
     // Filter logic
@@ -145,7 +151,7 @@ const StudentDashboard = () => {
                                     <td className="p-4 border">{record.marksObtained}</td>
                                     <td className="p-4 border">{record.totalMarks}</td>
                                     <td className="p-4 border text-center">
-                                        <button className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-1 rounded">
+                                        <button className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-1 rounded" onClick={() => handleDownloadPdf(record.quizID)}>
                                             Download Pdf
                                         </button>
                                     </td>
