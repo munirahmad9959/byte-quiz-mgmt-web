@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import jsPDF from 'jspdf';
-import { downloadPdf } from '../../utils';
+import { downloadPdf, fetchQuizCategories } from '../../utils';
 
 const StudentDashboard = () => {
     const navigate = useNavigate();
@@ -65,19 +64,8 @@ const StudentDashboard = () => {
     };
 
     const fetchCategories = async () => {
-        try {
-            const response = await axios.get('https://localhost:7093/api/Quiz/categories', {
-                headers: { Authorization: `Bearer ${token}`, Accept: 'text/plain' },
-            });
-            if (response.status === 200) {
-                setCategories(response.data.data);
-            } else {
-                console.error('Failed to fetch categories');
-            }
-        } catch (error) {
-            console.error(`Error fetching categories: ${error.message}`);
-        }
-    }; 
+        await fetchQuizCategories(token, setCategories);
+    };
 
     const handleDownloadPdf = async (quizID) => {
         await downloadPdf(quizID, token);
@@ -97,77 +85,77 @@ const StudentDashboard = () => {
     }, [token]);
 
     return (
-        <>
-            <h1 className="text-3xl font-semibold mb-4">Select Quiz to Take</h1>
-
-            <div className="flex items-center mb-4 mt-5 w-full space-x-5">
+        <div className="p-6 bg-gray-50 min-h-screen">
+            <h1 className="text-3xl font-bold mb-6 text-[#2b2a2a]">Available Quizzes</h1>
+            <div className="flex items-center mb-4 space-x-4">
                 <select
-                    id="default"
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="bg-gray-50 border border-gray-300 text-[#666] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[350px] p-2.5"
+                    className="bg-gray-50 border border-gray-300 rounded-lg p-2.5 w-[300px]"
                 >
-                    <option value="">Choose a subject</option>
-                    {categories.length > 0 &&
-                        categories.map((category) => (
-                            <option key={category.categoryID} value={category.name}>
-                                {category.name}
-                            </option>
-                        ))}
+                    <option value="">Choose a category</option>
+                    {categories.map((category) => (
+                        <option key={category.categoryID} value={category.name}>
+                            {category.name}
+                        </option>
+                    ))}
                 </select>
-
-                <button className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-5 py-2 rounded-xl" onClick={handleQuizClick}>
-                    Take Quiz
+                <button
+                    className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-2 rounded-lg shadow"
+                    onClick={handleQuizClick}
+                >
+                    Start Quiz
                 </button>
             </div>
 
-            <div className="mb-4">
-                <input
-                    type="text"
-                    placeholder="Search by subject name..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="border p-2 rounded w-full"
-                />
-            </div>
+            <input
+                type="text"
+                placeholder="Search by category..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="mb-4 p-2 border rounded-lg w-full focus:ring-2 focus:ring-blue-500"
+            />
 
-            <div className="overflow-x-auto border border-gray-300 rounded">
-                <table className="min-w-full bg-white">
-                    <thead className="bg-gray-200">
+            <div className="overflow-x-auto rounded-lg shadow bg-white">
+                <table className="min-w-full text-sm text-gray-700">
+                    <thead className="bg-gray-100 uppercase text-xs text-gray-600">
                         <tr>
-                            <th className="p-4 border">Quiz ID</th>
-                            <th className="p-4 border">Topic</th>
-                            <th className="p-4 border">Marks Obtained</th>
-                            <th className="p-4 border">Total Marks</th>
-                            <th className="p-4 border">Action</th>
+                            <th className="p-4">Quiz ID</th>
+                            <th className="p-4">Topic</th>
+                            <th className="p-4">Marks Obtained</th>
+                            <th className="p-4">Total Marks</th>
+                            <th className="p-4 text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredData.length > 0 ? (
                             filteredData.map((record) => (
-                                <tr key={record.id} className="hover:bg-gray-100">
-                                    <td className="p-4 border">{record.quizID}</td>
-                                    <td className="p-4 border">{record.categoryName}</td>
-                                    <td className="p-4 border">{record.marksObtained}</td>
-                                    <td className="p-4 border">{record.totalMarks}</td>
-                                    <td className="p-4 border text-center">
-                                        <button className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-1 rounded" onClick={() => handleDownloadPdf(record.quizID)}>
-                                            Download Pdf
+                                <tr key={record.id} className="border-t hover:bg-gray-50">
+                                    <td className="p-4">{record.quizID}</td>
+                                    <td className="p-4">{record.categoryName}</td>
+                                    <td className="p-4">{record.marksObtained}</td>
+                                    <td className="p-4">{record.totalMarks}</td>
+                                    <td className="p-4 text-center">
+                                        <button
+                                            className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-1 rounded-lg"
+                                            onClick={() => downloadPdf(record.quizID, token)}
+                                        >
+                                            Download PDF
                                         </button>
                                     </td>
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="5" className="p-4 text-center">
-                                    No records found
+                                <td colSpan="5" className="p-4 text-center text-gray-500">
+                                    No quizzes available
                                 </td>
                             </tr>
                         )}
                     </tbody>
                 </table>
             </div>
-        </>
+        </div>
     );
 };
 

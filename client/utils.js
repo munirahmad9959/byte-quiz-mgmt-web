@@ -1,5 +1,7 @@
 import jsPDF from "jspdf";
 import axios from "axios";
+import { useState } from "react";
+
 
 export const downloadPdf = async (quizID, token) => {
     alert(`Downloading PDF for Quiz ID: ${quizID}`);
@@ -89,5 +91,20 @@ export const downloadPdf = async (quizID, token) => {
     } catch (error) {
         console.error(`Error fetching quiz data: ${error.message}`);
         alert("Failed to download the PDF. Please try again.");
+    }
+}
+
+export const fetchQuizCategories = async (token, setCategories) => {
+    try {
+        const response = await axios.get('https://localhost:7093/api/Quiz/categories', {
+            headers: { Authorization: `Bearer ${token}`, Accept: 'text/plain' },
+        });
+        if (response.status === 200) {
+            setCategories(response.data.data);
+        } else {
+            console.error('Failed to fetch categories');
+        }
+    } catch (error) {
+        console.error(`Error fetching categories: ${error.message}`);
     }
 }

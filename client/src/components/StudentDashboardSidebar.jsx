@@ -8,12 +8,12 @@ import { IoIosAdd } from "react-icons/io";
 import { TbReport } from "react-icons/tb";
 import { TbBulbFilled } from "react-icons/tb";
 
-const DashboardSidebar = ({ setCurrentView }) => {
+const StudentDashboardSidebar = ({ setCurrentView }) => {
     const [activeLink, setActiveLink] = useState("Records");
 
     const links = [
         { name: "Records", icon: <TbReport style={{ fontSize: "1.2rem", marginRight: '5px' }} /> },
-        { name: "Add Quizzes", icon: <TbBulbFilled style={{ fontSize: "1rem", marginRight: '9px' }} /> },
+        { name: "Library", icon: <FaBook style={{ fontSize: "1rem", marginRight: '9px' }} /> },
         { name: "Reports", icon: <FaChartPie style={{ fontSize: "1rem", marginRight: '9px' }} /> },
         { name: "Classes", icon: <SiGoogleclassroom style={{ fontSize: "1rem", marginRight: '9px' }} /> },
         { name: "Accomodations", icon: <BiDonateHeart style={{ fontSize: "1rem", marginRight: '9px' }} /> },
@@ -40,7 +40,7 @@ const DashboardSidebar = ({ setCurrentView }) => {
                                     key={link.name}
                                     onClick={() => {
                                         setActiveLink(link.name);
-                                        setCurrentView(link.name);
+                                        // setCurrentView(link.name);
                                     }}
                                     className={`flex items-center space-x-2 text-[16px] p-2 rounded-xl cursor-pointer transition duration-200 ${activeLink === link.name ? "bg-[#F6F0FF] text-[#6A3DA5]" : "hover:bg-[#F6F0FF] hover:text-[#6A3DA5]"
                                         }`}
@@ -67,4 +67,4 @@ const DashboardSidebar = ({ setCurrentView }) => {
     );
 };
 
-export default DashboardSidebar;
+export default StudentDashboardSidebar;
