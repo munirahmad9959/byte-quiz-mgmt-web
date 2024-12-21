@@ -8,8 +8,6 @@ import QuizPage from "./pages/QuizPage";
 
 const App = () => {
   const isAuth = Boolean(useSelector((state) => state.auth.token));
-  console.log("Token", useSelector((state) => state.auth.token));
-  console.log("Is Auth:", isAuth);
 
   return (
     <BrowserRouter>

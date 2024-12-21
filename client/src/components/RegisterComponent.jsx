@@ -1,11 +1,13 @@
-import React from 'react'
-import { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { setLoading } from '../state';
+import { ApiClient } from '../../utils';
 
 const RegisterComponent = () => {
-
-    const [loading, setLoading] = useState(false);
+    const loading = useSelector((state) => state.auth.loading);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         FirstName: '',
         LastName: '',
@@ -20,27 +22,29 @@ const RegisterComponent = () => {
     };
 
     const handleRegister = async (e) => {
-
         e.preventDefault();
-        setLoading(true);
+        dispatch(setLoading(true));
         try {
-            const response = await axios.post('https://localhost:7093/api/Auth/register', formData);
-            console.log(response.data);
-            setLoading(false)
+            await ApiClient.post('/Auth/register', formData);
+            navigate('/login');
         } catch (error) {
             console.error(`Error from RegistrationForm: ${error}`);
-            setLoading(false);
+        } finally {
+            dispatch(setLoading(false));
         }
-    }
-
+    };
 
     return (
         <>
-            <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6 mt-7">Registration</h2>
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleRegister}>
+            <h2 className="text-2xl font-semibold text-gray-800 text-center mb-6 md:mt-7">Registration</h2>
+            <form
+                className="grid grid-cols-1 gap-6 md:grid-cols-2"
+                onSubmit={handleRegister}
+            >
                 <div>
                     <label className="block text-sm font-medium text-gray-700">First Name</label>
-                    <input required
+                    <input
+                        required
                         type="text"
                         name="FirstName"
                         placeholder="Enter Your Name"
@@ -51,7 +55,8 @@ const RegisterComponent = () => {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Last Name</label>
-                    <input required
+                    <input
+                        required
                         type="text"
                         name="LastName"
                         placeholder="Enter Your Username"
@@ -60,9 +65,10 @@ const RegisterComponent = () => {
                         className="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-1 md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700">Email</label>
-                    <input required
+                    <input
+                        required
                         type="email"
                         name="Email"
                         placeholder="Enter Your E-mail"
@@ -73,7 +79,8 @@ const RegisterComponent = () => {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Password</label>
-                    <input required
+                    <input
+                        required
                         type="password"
                         name="Password"
                         placeholder="Enter Your Password"
@@ -84,16 +91,17 @@ const RegisterComponent = () => {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
-                    <input required
+                    <input
+                        required
                         type="password"
                         name="ConfirmPassword"
-                        placeholder="Enter Your Password"
+                        placeholder="Confirm Your Password"
                         value={formData.ConfirmPassword}
                         onChange={handleChange}
                         className="mt-1 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-1 md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700">Roles</label>
                     <div className="mt-2 flex space-x-4">
                         <label className="inline-flex items-center">
@@ -120,17 +128,18 @@ const RegisterComponent = () => {
                         </label>
                     </div>
                 </div>
-                <div className="col-span-2">
-                    <button disabled={loading}
+                <div className="col-span-1 md:col-span-2">
+                    <button
+                        disabled={loading}
                         type="submit"
-                        className="w-full py-3 bg-[#8854c0] hover:bg-[#6a3da5] from-blue-400 to-purple-500 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                        className="w-full py-3 bg-[#8854c0] hover:bg-[#6a3da5] text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
                     >
                         {loading ? "Loading" : "Register"}
                     </button>
                 </div>
             </form>
         </>
-    )
-}
+    );
+};
 
-export default RegisterComponent
+export default RegisterComponent;

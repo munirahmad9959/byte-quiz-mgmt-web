@@ -1,8 +1,8 @@
 import jsPDF from "jspdf";
 import axios from "axios";
-import { useState } from "react";
+import { setLoading } from "./src/state";
 
-
+// PDF Download Function
 export const downloadPdf = async (quizID, token) => {
     alert(`Downloading PDF for Quiz ID: ${quizID}`);
 
@@ -94,17 +94,31 @@ export const downloadPdf = async (quizID, token) => {
     }
 }
 
-export const fetchQuizCategories = async (token, setCategories) => {
+// Fetch Quiz Categories
+export const fetchQuizCategories = async (token, setCategories, dispatch) => {
+    dispatch((setLoading(true)));
     try {
-        const response = await axios.get('https://localhost:7093/api/Quiz/categories', {
-            headers: { Authorization: `Bearer ${token}`, Accept: 'text/plain' },
+        const response = await axios.get("https://localhost:7093/api/Quiz/categories", {
+            headers: { Authorization: `Bearer ${token}`, Accept: "text/plain" },
         });
         if (response.status === 200) {
             setCategories(response.data.data);
         } else {
-            console.error('Failed to fetch categories');
+            console.error("Failed to fetch categories");
         }
     } catch (error) {
         console.error(`Error fetching categories: ${error.message}`);
+    } finally {
+        dispatch(setLoading(false));
     }
-}
+};
+
+
+export const ApiClient = axios.create({
+    baseURL: 'https://localhost:7093/api', // Base URL for your API
+    timeout: 5000, // Optional: request timeout
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
+

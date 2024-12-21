@@ -5,7 +5,7 @@ import { BsFillUnlockFill } from "react-icons/bs";
 import { IoIosAdd } from "react-icons/io";
 import { TbReport, TbBulbFilled } from "react-icons/tb";
 
-const TeacherDashboardSidebar = ({ setCurrentView }) => {
+const TeacherDashboardSidebar = ({ setCurrentView, showSidebar, setShowSidebar }) => {
     const [activeLink, setActiveLink] = useState("Records");
 
     const links = [
@@ -21,7 +21,7 @@ const TeacherDashboardSidebar = ({ setCurrentView }) => {
     }, [activeLink]);
 
     return (
-        <aside className="w-64 bg-[#fff] text-white p-4 fixed h-full">
+        <aside className={`transition-transform transform ${showSidebar ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 w-64 bg-white text-gray-700 p-4 fixed h-full z-40`}>
             <a href="/">
                 <img src="./images/byteQuiz.png" alt="logo" className="w-[130px] cursor-pointer" />
             </a>
@@ -44,6 +44,7 @@ const TeacherDashboardSidebar = ({ setCurrentView }) => {
                                 onClick={() => {
                                     setActiveLink(link.name);
                                     setCurrentView(link.name);
+                                    setShowSidebar(false);
                                 }}
                                 className={`flex items-center space-x-2 text-[16px] p-2 rounded-xl cursor-pointer transition duration-200 ${activeLink === link.name ? "bg-[#F6F0FF] text-[#6A3DA5]" : "hover:bg-[#F6F0FF] hover:text-[#6A3DA5]"
                                     }`}

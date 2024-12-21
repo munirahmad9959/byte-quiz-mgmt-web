@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import { ApiClient } from '../../utils';
 
 const QuizPage = () => {
     const [selectedOptions, setSelectedOptions] = useState({});
@@ -9,6 +10,7 @@ const QuizPage = () => {
     const [timeLeft, setTimeLeft] = useState(30); // Timer state in seconds
     const location = useLocation();
     const user = useSelector((state) => state.auth.user);
+    const token = useSelector((state) => state.auth.token);
     const navigate = useNavigate();
     const quizData = location.state?.quizData || []; // Retrieve passed quiz data
     const categoryID = location.state?.categoryID || null; // Retrieve passed categoryID
@@ -49,11 +51,12 @@ const QuizPage = () => {
         let responseData = null;
 
         try {
-            const response = await axios.post(
-                'https://localhost:7093/api/Quiz/record/quizzies/submission',
-                quiz
+            const response = await ApiClient.post(
+                '/Quiz/record/quizzies/submission',
+                quiz, {
+                headers: { Authorization: `Bearer ${token}`, Accept: "text/plain" },
+            }
             );
-            console.log('Quiz submission successful:', response.data.data);
             responseData = response.data.data;
             alert(`Quiz submitted! You scored ${score} out of ${quizData.length}.`);
         } catch (error) {
@@ -79,12 +82,12 @@ const QuizPage = () => {
         }
 
         try {
-            const response = await axios.post(
-                'https://localhost:7093/api/Quiz/record/submission',
-                submission
+            const response = await ApiClient.post(
+                '/Quiz/record/submission',
+                submission, {
+                headers: { Authorization: `Bearer ${token}`, Accept: "text/plain" },
+            }
             );
-            console.log('Submission successful:', response.data);
-            alert(`Quiz submitted! You scored ${score} out of ${quizData.length}.`);
             navigate('/dashboard');
         } catch (error) {
             console.error('Submission error:', error.response?.data || error.message);

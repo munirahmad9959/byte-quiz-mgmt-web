@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { fetchQuizCategories } from "../../utils";
-import { useSelector } from "react-redux";
+import { ApiClient, fetchQuizCategories } from "../../utils";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
-const AddQuizForm = () => {
+const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [quizzes, setQuizzes] = useState([]);
@@ -12,15 +13,13 @@ const AddQuizForm = () => {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false); // New state for delete confirmation
     const [quizToDelete, setQuizToDelete] = useState(null); // Store the quiz to be deleted
     const token = useSelector((state) => state.auth.token);
-
-    const fetchCategories = async () => {
-        await fetchQuizCategories(token, setCategories);
-    };
+    const loading = useSelector((state) => state.auth.loading);
+    const dispatch = useDispatch();
 
     const handleQuizClick = () => {
         if (selectedCategory !== "Choose a subject" && selectedCategory !== "") {
-            axios
-                .get(`https://localhost:7093/api/Quiz/get-quizzes/catName`, {
+            ApiClient
+                .get(`/Quiz/get-quizzes/catName`, {
                     params: { catName: selectedCategory },
                     headers: { Authorization: `Bearer ${token}`, Accept: "text/plain" },
                 })
@@ -83,9 +82,9 @@ const AddQuizForm = () => {
             CorrectAnswer: correctOption,
         };
 
-        axios
+        ApiClient
             .post(
-                `https://localhost:7093/api/Quiz/add-quizzes/catName`,
+                `/Quiz/add-quizzes/catName`,
                 payload,
                 {
                     params: { catName: selectedCategory },
@@ -96,7 +95,6 @@ const AddQuizForm = () => {
                 }
             )
             .then((response) => {
-                console.log("Quiz added successfully:", response.data);
                 alert("Quiz added successfully!");
                 clearTextboxes(); // Clear fields on success
                 handleQuizClick(); // Refresh quiz list
@@ -147,9 +145,9 @@ const AddQuizForm = () => {
             CorrectAnswer: correctOption,
         };
 
-        axios
+        ApiClient
             .post(
-                `https://localhost:7093/api/Quiz/edit-quizzes/catName`,
+                `/Quiz/edit-quizzes/catName`,
                 payload,
                 {
                     params: { catName: selectedCategory },
@@ -160,7 +158,6 @@ const AddQuizForm = () => {
                 }
             )
             .then((response) => {
-                console.log("Quiz updated successfully:", response.data);
                 alert("Quiz updated successfully!");
                 clearTextboxes(); // Clear fields on success
                 handleQuizClick(); // Refresh quiz list
@@ -172,7 +169,6 @@ const AddQuizForm = () => {
                 );
             });
 
-        console.log("Payload for edit is: ", payload);
     };
 
     const handleDeleteQuiz = (quizId) => {
@@ -182,14 +178,15 @@ const AddQuizForm = () => {
 
     const confirmDelete = () => {
         if (quizToDelete) {
-            axios
-                .delete(`https://localhost:7093/api/Quiz/delete/quiz/${quizToDelete}`, {
+            ApiClient
+                .delete(`/Quiz/delete/quiz/${quizToDelete}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 })
                 .then((response) => {
                     alert("Quiz deleted successfully!");
+                    clearTextboxes(); // Clear fields on success
                     handleQuizClick(); // Refresh quiz list
                 })
                 .catch((error) => {
@@ -206,8 +203,6 @@ const AddQuizForm = () => {
     const cancelDelete = () => {
         setShowDeleteDialog(false); // Close the dialog without deletion
     };
-
-
 
     const handleRowClick = (quiz) => {
         setSelectedQuiz(quiz);
@@ -226,20 +221,24 @@ const AddQuizForm = () => {
 
 
     useEffect(() => {
-        fetchCategories();
-    }, [token]);
+        fetchQuizCategories(token, setCategories, dispatch);
+    }, [token, dispatch]);
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="p-6 bg-gray-50 min-h-screen" onClick={() => { setShowSidebar(false); setNavDropDown(false); }}>
             <h1 className="text-4xl font-bold text-purple-800 mb-6 text-center">
                 Manage Your Quizzes
             </h1>
-            <div className="flex items-center justify-center mb-8">
+
+            <div className="flex items-center space-y-2 mb-4 space-x-0 md:space-x-4 md:flex-row flex-col">
                 <select
                     id="default"
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="bg-white border border-gray-300 text-gray-700 text-base rounded-lg focus:ring-purple-500 focus:border-purple-500 w-80 p-3"
+                    className="bg-gray-50 border border-gray-300 rounded-lg p-2.5 w-[300px] sm:w-[250px] text-sm"
+                    style={{
+                        width: "200px", // Adjust the dropdown box width
+                    }}
                 >
                     <option value="">Choose a subject</option>
                     {categories.length > 0 &&
@@ -250,12 +249,13 @@ const AddQuizForm = () => {
                         ))}
                 </select>
                 <button
-                    className="ml-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-lg"
+                    className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-2 md:py-2 rounded-lg shadow"
                     onClick={handleQuizClick}
                 >
                     Show Quizzes
                 </button>
             </div>
+
 
             {/* Input Fields for Quiz Management */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">

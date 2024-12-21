@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { downloadPdf, fetchQuizCategories } from '../../utils';
+import { v4 as uuidv4 } from 'uuid'; // Import uuid
+import { ApiClient, downloadPdf, fetchQuizCategories } from '../../utils';
 
-const StudentDashboard = () => {
+const StudentDashboard = ({ setShowSidebar, setNavDropDown }) => {
     const navigate = useNavigate();
     const token = useSelector((state) => state.auth.token);
     const [quizData, setQuizData] = useState([]);
@@ -12,11 +13,12 @@ const StudentDashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
+    const dispatch = useDispatch();
 
     const handleQuizClick = () => {
         if (selectedCategory !== 'Choose a subject' && selectedCategory !== '') {
-            axios
-                .get(`https://localhost:7093/api/Quiz/category`, {
+            ApiClient
+                .get(`/Quiz/category`, {
                     params: { categoryName: selectedCategory },
                     headers: { Authorization: `Bearer ${token}`, Accept: 'text/plain' },
                 })
@@ -49,7 +51,7 @@ const StudentDashboard = () => {
                 console.error('User is not authenticated');
                 return;
             }
-            const response = await axios.get('https://localhost:7093/api/Quiz/user', {
+            const response = await ApiClient.get('/Quiz/user', {
                 headers: { Authorization: `Bearer ${token}`, Accept: 'text/plain' },
             });
             if (response.status === 200) {
@@ -63,12 +65,15 @@ const StudentDashboard = () => {
         }
     };
 
-    const fetchCategories = async () => {
-        await fetchQuizCategories(token, setCategories);
-    };
-
     const handleDownloadPdf = async (quizID) => {
-        await downloadPdf(quizID, token);
+        try {
+            console.log('Downloading PDF for quizID:', quizID); // Debugging log
+            console.log('Token:', token); // Debugging log
+            await downloadPdf(quizID, token);
+        } catch (error) {
+            console.error('Error in handleDownloadPdf:', error.message);
+            alert('Failed to download PDF. Please check your connection or try again.');
+        }
     };
 
     // Filter logic
@@ -81,27 +86,38 @@ const StudentDashboard = () => {
 
     useEffect(() => {
         fetchData();
-        fetchCategories();
-    }, [token]);
+        fetchQuizCategories(token, setCategories, dispatch);
+    }, [token, dispatch]);
 
     return (
-        <div className="p-6 bg-gray-50 min-h-screen">
-            <h1 className="text-3xl font-bold mb-6 text-[#2b2a2a]">Available Quizzes</h1>
-            <div className="flex items-center mb-4 space-x-4">
+        <div className="p-6 bg-gray-50 min-h-screen"
+            onClick={() => {
+                setShowSidebar(false);
+                setNavDropDown(false);
+            }}>
+
+            <div className="flex justify-center">
+                <h1 className="text-3xl font-bold mb-6 text-[#2b2a2a]">Available Quizzes</h1>
+            </div>
+
+            <div className="flex items-center space-y-2 mb-4 space-x-0 md:space-x-4 md:flex-row flex-col">
                 <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="bg-gray-50 border border-gray-300 rounded-lg p-2.5 w-[300px]"
+                    className="bg-gray-50 border border-gray-300 rounded-lg p-2.5 w-[300px] sm:w-[250px] text-sm"
+                    style={{
+                        width: "200px", // Adjust the dropdown box width
+                    }}
                 >
                     <option value="">Choose a category</option>
                     {categories.map((category) => (
-                        <option key={category.categoryID} value={category.name}>
+                        <option key={uuidv4()} value={category.name}>
                             {category.name}
                         </option>
                     ))}
                 </select>
                 <button
-                    className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-2 rounded-lg shadow"
+                    className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-2 md:py-2 rounded-lg shadow"
                     onClick={handleQuizClick}
                 >
                     Start Quiz
@@ -130,7 +146,7 @@ const StudentDashboard = () => {
                     <tbody>
                         {filteredData.length > 0 ? (
                             filteredData.map((record) => (
-                                <tr key={record.id} className="border-t hover:bg-gray-50">
+                                <tr key={uuidv4()} className="border-t hover:bg-gray-50">
                                     <td className="p-4">{record.quizID}</td>
                                     <td className="p-4">{record.categoryName}</td>
                                     <td className="p-4">{record.marksObtained}</td>
@@ -138,7 +154,7 @@ const StudentDashboard = () => {
                                     <td className="p-4 text-center">
                                         <button
                                             className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-1 rounded-lg"
-                                            onClick={() => downloadPdf(record.quizID, token)}
+                                            onClick={() => handleDownloadPdf(record.quizID)}
                                         >
                                             Download PDF
                                         </button>
