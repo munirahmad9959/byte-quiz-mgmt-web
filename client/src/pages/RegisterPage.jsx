@@ -34,22 +34,10 @@ const RegisterPage = () => {
                     </div>
                 </div>
 
-                {/* Registration Form Section */}
-                {/* <div className="flex justify-center items-center">
-                    <div className="container border-2 border-[#ccc] bg-[#ccc] rounded-xl flex justify-center items-center mx-auto w-[850px] mt-28 sm:px-0 space-x-10 p-5 flex-col md:flex-row">
-                        <div className="left w-1/2 hidden sm:block">
-                            <img src="./images/imageUpscaled.png" alt="register" className="w-full h-full object-cover" />
-                        </div>
-                        <div className="rightRegisterForm md:w-1/2 w-full">
-                            <RegisterComponent />
-                        </div>
-                    </div>
-                </div> */}
-
                 <div className="flex justify-center items-center px-4 py-24 sm:px-0">
                     <div className="container border-2 border-[#ccc] bg-[#ccc] rounded-xl flex flex-col md:flex-row justify-center items-center mx-auto w-full max-w-[850px] space-y-5 md:space-y-0 md:space-x-10 p-5">
                         <div className="left w-full md:w-1/2">
-                            <img src="./images/imageUpscaled.png" alt="register" className="w-full h-full object-cover rounded-lg hidden sm:bloc" />
+                            <img src="./images/imageUpscaled.png" alt="register" className="w-full h-full object-cover rounded-lg hidden sm:block" />
                         </div>
                         <div className="rightRegisterForm w-full md:w-1/2">
                             <RegisterComponent />

@@ -25,7 +25,7 @@ const LoginPage = () => {
                     </div>
 
                     <nav className="flex items-center space-x-3">
-                        <button className='hidden sm-block text-[#8854c0] border border-[#f3f3f3] px-4 py-2 rounded-lg transition duration-200 hover:bg-[#efe5ff]'>Join a game</button>
+                        <button className='hidden sm:block text-[#8854c0] border border-[#f3f3f3] px-4 py-2 rounded-lg transition duration-200 hover:bg-[#efe5ff]'>Join a game</button>
 
                         <button className='text-white bg-[#8854c0] px-4 py-2 rounded-lg transition duration-200 hover:bg-[#6a3da5]' onClick={handleClick}>Sign up</button>
                     </nav>

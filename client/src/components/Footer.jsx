@@ -12,13 +12,13 @@ const Footer = () => {
               <img
                 src="./images/byteQuiz.png"
                 alt="Quizizz Logo"
-                className="w-[200px] absolute left-[-40px] top-0"
+                className="w-[120px] md:w-[200px] absolute md:left-[-40px] -left-[20px] -top-[30px] md:top-0"
               />
             </a>
             <a
               href="https://support.quizizz.com/hc/en-us/articles/360055566272-Quizizz-Accessibility-and-Inclusion-Statement"
               target="_blank" rel="noopener noreferrer"
-              className="flex items-center space-x-2 text-sm absolute left-0 top-[120px]"
+              className="flex items-center space-x-2 text-sm absolute md:left-0 md:top-[120px] left-[150px] -top-[20px]"
             >
               <img
                 src="https://cdn.prod.website-files.com/60aca2b71ab9a5e4ececf1cf/64a3c543f0df3bde4580f844_Accessibility_Icon.webp"
