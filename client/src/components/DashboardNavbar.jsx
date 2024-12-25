@@ -51,7 +51,7 @@ const DashboardNavbar = ({ setShowSidebar, navDropDown, setNavDropDown }) => {
                 </button>
 
                 {/* Right section: Notifications, Help, and User Dropdown */}
-                <div className="space-x-3 flex items-center">
+                <div className="space-x-3 flex ml-auto items-center">
                     <button className="border border-[#bababa] rounded-lg px-2 py-1">
                         <IoMdNotificationsOutline style={{ fontSize: "1.5rem", color: "#666" }} />
                     </button>
