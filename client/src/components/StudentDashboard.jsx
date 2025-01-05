@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid
 import { ApiClient, downloadPdf, fetchQuizCategories } from '../../utils';
 import { FaFilter } from 'react-icons/fa';
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const StudentDashboard = ({ setShowSidebar, setNavDropDown }) => {
     const navigate = useNavigate();
@@ -34,14 +36,14 @@ const StudentDashboard = ({ setShowSidebar, setNavDropDown }) => {
                             },
                         });
                     } else {
-                        alert('No questions available for this category');
+                        toast.info('No questions available for this category');
                     }
                 })
                 .catch((error) => {
-                    console.error('Error:', error.response ? error.response.data : error.message);
+                    toast.error('Error:', error.response ? error.response.data : error.message);
                 });
         } else {
-            alert('Please select a subject to take quiz first!');
+            toast.warn('Please select a subject to take quiz first!');
         }
     };
 
@@ -72,7 +74,7 @@ const StudentDashboard = ({ setShowSidebar, setNavDropDown }) => {
             await downloadPdf(quizID, token);
         } catch (error) {
             console.error('Error in handleDownloadPdf:', error.message);
-            alert('Failed to download PDF. Please check your connection or try again.');
+            toast.error('Failed to download PDF. Please check your connection or try again.');
         }
     };
 
@@ -95,6 +97,7 @@ const StudentDashboard = ({ setShowSidebar, setNavDropDown }) => {
                 setShowSidebar(false);
                 setNavDropDown(false);
             }}>
+            <ToastContainer position="top-right" autoClose={3000} />
 
             <div className="flex justify-center">
                 <h1 className="text-3xl font-bold mb-6 text-[#2b2a2a]">Available Quizzes</h1>

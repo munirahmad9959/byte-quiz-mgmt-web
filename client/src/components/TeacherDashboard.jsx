@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid"; // Import uuid
 import { setLoading } from "../state";
 import PlayLoading from "./PlayLoading";
 import { ApiClient, downloadPdf } from "../../utils";
+import { ToastContainer } from "react-toastify";
 
 const TeacherDashboard = ({ setShowSidebar, setNavDropDown }) => {
   const token = useSelector((state) => state.auth.token);
@@ -51,6 +52,7 @@ const TeacherDashboard = ({ setShowSidebar, setNavDropDown }) => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen relative" onClick={() => { setShowSidebar(false); setNavDropDown(false); }}>
+      <ToastContainer position="top-right" autoClose={3000} />
       {loading && <PlayLoading />}
       <div className={`flex flex-col ${loading ? "opacity-50 pointer-events-none" : ""}`}>
         <div className="flex md:flex-row flex-col justify-between items-center mb-6 space-y-6">

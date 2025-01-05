@@ -1,6 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setLogin } from '../state';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +7,9 @@ import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from 'react-icons/fc';
 import { setLoading } from '../state';
 import { ApiClient } from '../../utils';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+
 
 const LoginComponent = () => {
     const navigate = useNavigate();
@@ -25,7 +27,7 @@ const LoginComponent = () => {
             navigate("/dashboard");
         } catch (error) {
             console.error("Login error:", error);
-            alert(error.response?.data?.message || "Login failed! Please try again.");
+            toast.error(error.response?.data?.message || "Login failed! Please try again.");
         } finally {
             dispatch(setLoading(false));
         }
@@ -33,6 +35,7 @@ const LoginComponent = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-[#461A42] md:mt-14 px-4 sm:px-6 md:px-8">
+            <ToastContainer position="top-right" autoClose={3000} />
             <div className="logincard flex flex-col md:flex-row max-w-4xl w-full rounded-2xl overflow-hidden shadow-lg">
                 {/* Left Side with Image */}
                 <div className="hidden md:block md:w-1/2">

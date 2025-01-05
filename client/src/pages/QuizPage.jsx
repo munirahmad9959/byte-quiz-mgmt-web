@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ApiClient } from '../../utils';
-import { ToastContainer, toast, Slide } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const QuizPage = () => {
@@ -17,9 +17,15 @@ const QuizPage = () => {
     const categoryName = location.state?.categoryName || 'Unknown';
     const [isSubmitted, setIsSubmitted] = useState(false);
 
+    const timerRef = useRef(null);
+
     const handleSubmit = async () => {
         if (isSubmitted) return;
         setIsSubmitted(true);
+
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
 
         const answeredQuestions = quizData.map((question) => {
             const options = JSON.parse(question.options);
@@ -99,9 +105,9 @@ const QuizPage = () => {
     };
 
     useEffect(() => {
-        if (timeLeft > 0) {
-            const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-            return () => clearInterval(timer);
+        if (timeLeft > 0 && !isSubmitted) {
+            timerRef.current = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
+            return () => clearInterval(timerRef.current);
         } else if (!isSubmitted) {
             handleSubmit();
         }
@@ -116,15 +122,10 @@ const QuizPage = () => {
 
     return (
         <div className="bg-gray-100 min-h-screen">
-            {/* Toast Container */}
             <ToastContainer
                 position="top-right"
-                autoClose={3500}
-                closeButton={false}
-                transition={Slide}
-                hideProgressBar={false}
+                autoClose={3000}
             />
-            {/* Sticky Navbar */}
             <div className="fixed top-0 left-0 w-full bg-white shadow-md z-10">
                 <div className="max-w-3xl mx-auto flex justify-between items-center p-4">
                     <div className="text-lg font-semibold text-gray-800">
@@ -138,8 +139,6 @@ const QuizPage = () => {
                     </button>
                 </div>
             </div>
-
-            {/* Quiz Questions */}
             <div className="mt-16 max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
                 <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">
                     Quiz Questions

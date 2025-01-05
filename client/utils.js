@@ -1,10 +1,13 @@
 import jsPDF from "jspdf";
 import axios from "axios";
 import { setLoading } from "./src/state";
+import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 // PDF Download Function
 export const downloadPdf = async (quizID, token) => {
-    alert(`Downloading PDF for Quiz ID: ${quizID}`);
+    // <ToastContainer position="top-right" autoClose={3000} />
+    toast.success(`Downloading PDF for Quiz ID: ${quizID}`);
 
     try {
         const response = await axios.get(`https://localhost:7093/api/Quiz/get-record/quizId`, {
@@ -90,7 +93,7 @@ export const downloadPdf = async (quizID, token) => {
         doc.save(`Quiz_${quizID}_Result.pdf`);
     } catch (error) {
         console.error(`Error fetching quiz data: ${error.message}`);
-        alert("Failed to download the PDF. Please try again.");
+        toast.error("Failed to download the PDF. Please try again.");
     }
 }
 
