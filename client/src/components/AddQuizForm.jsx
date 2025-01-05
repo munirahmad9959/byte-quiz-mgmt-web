@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ApiClient, fetchQuizCategories } from "../../utils";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
-import { v4 as uuidv4 } from "uuid";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
     const [categories, setCategories] = useState([]);
@@ -39,7 +39,7 @@ const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
                     }
                 });
         } else {
-            alert("Please select a subject to take quiz first!");
+            toast.warn("Please select a subject to take quiz first!");
         }
     };
 
@@ -60,19 +60,19 @@ const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
         }));
 
         if (!selectedCategory) {
-            alert("Please select a category!");
+            toast.warn("Please select a category!");
             return;
         }
         if (!questionText) {
-            alert("Please enter a question!");
+            toast.warn("Please enter a question!");
             return;
         }
         if (options.some((opt) => !opt.Text)) {
-            alert("Please fill out all options!");
+            toast.warn("Please fill out all options!");
             return;
         }
         if (!correctOption || !["A", "B", "C", "D"].includes(correctOption)) {
-            alert("Correct option must be one of A, B, C, or D!");
+            toast.warn("Correct option must be one of A, B, C, or D!");
             return;
         }
 
@@ -95,13 +95,13 @@ const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
                 }
             )
             .then((response) => {
-                alert("Quiz added successfully!");
+                toast.success("Quiz added successfully!");
                 clearTextboxes(); // Clear fields on success
                 handleQuizClick(); // Refresh quiz list
             })
             .catch((error) => {
-                console.error("Error adding quiz:", error.response ? error.response.data : error.message);
-                alert(
+                // console.error("Error adding quiz:", error.response ? error.response.data : error.message);
+                toast.error(
                     error.response?.data?.message || "An error occurred while adding the quiz."
                 );
                 clearTextboxes(); // Clear fields on error
@@ -110,7 +110,7 @@ const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
 
     const handleEditQuiz = () => {
         if (!selectedQuiz) {
-            alert("Please select a quiz to edit.");
+            toast.warn("Please select a quiz to edit.");
             return;
         }
 
@@ -122,19 +122,19 @@ const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
         }));
 
         if (!selectedCategory) {
-            alert("Please select a category!");
+            toast.warn("Please select a category!");
             return;
         }
         if (!questionText) {
-            alert("Please enter a question!");
+            toast.warn("Please enter a question!");
             return;
         }
         if (options.some((opt) => !opt.Text)) {
-            alert("Please fill out all options!");
+            toast.warn("Please fill out all options!");
             return;
         }
         if (!correctOption || !["A", "B", "C", "D"].includes(correctOption)) {
-            alert("Correct option must be one of A, B, C, or D!");
+            toast.warn("Correct option must be one of A, B, C, or D!");
             return;
         }
 
@@ -158,13 +158,13 @@ const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
                 }
             )
             .then((response) => {
-                alert("Quiz updated successfully!");
+                toast.success("Quiz updated successfully!");
                 clearTextboxes(); // Clear fields on success
                 handleQuizClick(); // Refresh quiz list
             })
             .catch((error) => {
-                console.error("Error updating quiz:", error.response ? error.response.data : error.message);
-                alert(
+                // console.error("Error updating quiz:", error.response ? error.response.data : error.message);
+                toast.error(
                     error.response?.data?.message || "An error occurred while updating the quiz."
                 );
             });
@@ -185,13 +185,13 @@ const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
                     },
                 })
                 .then((response) => {
-                    alert("Quiz deleted successfully!");
+                    toast.success("Quiz deleted successfully!");
                     clearTextboxes(); // Clear fields on success
                     handleQuizClick(); // Refresh quiz list
                 })
                 .catch((error) => {
                     console.error("Error deleting quiz:", error.response ? error.response.data : error.message);
-                    alert(
+                    toast.error(
                         error.response?.data?.message || "An error occurred while deleting the quiz."
                     );
                 });
@@ -226,6 +226,7 @@ const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
 
     return (
         <div className="p-6 bg-gray-50 min-h-screen" onClick={() => { setShowSidebar(false); setNavDropDown(false); }}>
+            <ToastContainer position="top-right" autoClose={3000} />
             <h1 className="text-4xl font-bold text-purple-800 mb-6 text-center">
                 Manage Your Quizzes
             </h1>

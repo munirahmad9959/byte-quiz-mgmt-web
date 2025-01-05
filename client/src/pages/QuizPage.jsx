@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { ApiClient } from '../../utils';
+import { ToastContainer, toast, Slide } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const QuizPage = () => {
     const [selectedOptions, setSelectedOptions] = useState({});
-    // State to track selected options and timer
-    const [timeLeft, setTimeLeft] = useState(30); // Timer state in seconds
+    const [timeLeft, setTimeLeft] = useState(30);
     const location = useLocation();
     const user = useSelector((state) => state.auth.user);
     const token = useSelector((state) => state.auth.token);
     const navigate = useNavigate();
-    const quizData = location.state?.quizData || []; // Retrieve passed quiz data
-    const categoryID = location.state?.categoryID || null; // Retrieve passed categoryID
-    const categoryName = location.state?.categoryName || 'Unknown'; // Retrieve passed categoryName
+    const quizData = location.state?.quizData || [];
+    const categoryID = location.state?.categoryID || null;
+    const categoryName = location.state?.categoryName || 'Unknown';
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-
     const handleSubmit = async () => {
-        if (isSubmitted) return; // Prevent duplicate submissions
-        setIsSubmitted(true); // Mark as submitted
+        if (isSubmitted) return;
+        setIsSubmitted(true);
 
         const answeredQuestions = quizData.map((question) => {
             const options = JSON.parse(question.options);
@@ -40,11 +39,11 @@ const QuizPage = () => {
             StartTime: new Date().toISOString(),
             EndTime: new Date().toISOString(),
             MarksObtained: score,
-            TotalMarks: quizData.length
+            TotalMarks: quizData.length,
         };
 
         if (!quiz.UserId || !quiz.CategoryName) {
-            alert('Missing required data for submission. Please try again.');
+            toast.error('Missing required data for submission. Please try again.');
             return;
         }
 
@@ -53,16 +52,17 @@ const QuizPage = () => {
         try {
             const response = await ApiClient.post(
                 '/Quiz/record/quizzies/submission',
-                quiz, {
-                headers: { Authorization: `Bearer ${token}`, Accept: "text/plain" },
-            }
+                quiz,
+                {
+                    headers: { Authorization: `Bearer ${token}`, Accept: 'text/plain' },
+                }
             );
             responseData = response.data.data;
-            alert(`Quiz submitted! You scored ${score} out of ${quizData.length}.`);
+            toast.success(`Quiz submitted! You scored ${score} out of ${quizData.length}. Now redirecting to dashboard...`);
         } catch (error) {
             console.error('Submission error:', error.response?.data || error.message);
-            alert('Failed to submit the quiz. Please try again.');
-            return; // Stop further execution if the first submission fails
+            toast.error('Failed to submit the quiz. Please try again.');
+            return;
         }
 
         const submission = {
@@ -77,21 +77,24 @@ const QuizPage = () => {
         };
 
         if (!submission.UserId || !submission.CategoryID || !submission.QuizID) {
-            alert('Missing required data for submission. Please try again.');
+            toast.error('Missing required data for submission. Please try again.');
             return;
         }
 
         try {
-            const response = await ApiClient.post(
+            await ApiClient.post(
                 '/Quiz/record/submission',
-                submission, {
-                headers: { Authorization: `Bearer ${token}`, Accept: "text/plain" },
-            }
+                submission,
+                {
+                    headers: { Authorization: `Bearer ${token}`, Accept: 'text/plain' },
+                }
             );
-            navigate('/dashboard');
+            setTimeout(() => {
+                navigate('/dashboard');
+            }, 4750);
         } catch (error) {
             console.error('Submission error:', error.response?.data || error.message);
-            alert('Failed to submit the quiz. Please try again.');
+            toast.error('Failed to submit the quiz. Please try again.');
         }
     };
 
@@ -100,23 +103,27 @@ const QuizPage = () => {
             const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
             return () => clearInterval(timer);
         } else if (!isSubmitted) {
-            handleSubmit(); // Auto-submit when time runs out
+            handleSubmit();
         }
     }, [timeLeft, isSubmitted]);
 
-    // Handle option selection
     const handleOptionSelect = (questionID, option) => {
         setSelectedOptions((prev) => ({
             ...prev,
-            [questionID]: option, // Update selected option for the question
+            [questionID]: option,
         }));
     };
 
-
-    // Handle submission logic
-
     return (
         <div className="bg-gray-100 min-h-screen">
+            {/* Toast Container */}
+            <ToastContainer
+                position="top-right"
+                autoClose={3500}
+                closeButton={false}
+                transition={Slide}
+                hideProgressBar={false}
+            />
             {/* Sticky Navbar */}
             <div className="fixed top-0 left-0 w-full bg-white shadow-md z-10">
                 <div className="max-w-3xl mx-auto flex justify-between items-center p-4">
@@ -143,7 +150,7 @@ const QuizPage = () => {
                     </p>
                 ) : (
                     quizData.map((question, index) => {
-                        const options = JSON.parse(question.options); // Deserialize JSON options
+                        const options = JSON.parse(question.options);
                         return (
                             <div
                                 key={question.questionID}
@@ -156,10 +163,11 @@ const QuizPage = () => {
                                     {options.map((option) => (
                                         <li
                                             key={option.Option}
-                                            className={`p-3 rounded-md border cursor-pointer transition ${selectedOptions[question.questionID] === option.Option
-                                                ? 'bg-blue-500 text-white border-blue-500'
-                                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
-                                                }`}
+                                            className={`p-3 rounded-md border cursor-pointer transition ${
+                                                selectedOptions[question.questionID] === option.Option
+                                                    ? 'bg-blue-500 text-white border-blue-500'
+                                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                                            }`}
                                             onClick={() =>
                                                 handleOptionSelect(question.questionID, option.Option)
                                             }

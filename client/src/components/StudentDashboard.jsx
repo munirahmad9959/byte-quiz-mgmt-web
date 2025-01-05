@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid
 import { ApiClient, downloadPdf, fetchQuizCategories } from '../../utils';
+import { FaFilter } from 'react-icons/fa';
 
 const StudentDashboard = ({ setShowSidebar, setNavDropDown }) => {
     const navigate = useNavigate();
@@ -100,37 +100,43 @@ const StudentDashboard = ({ setShowSidebar, setNavDropDown }) => {
                 <h1 className="text-3xl font-bold mb-6 text-[#2b2a2a]">Available Quizzes</h1>
             </div>
 
-            <div className="flex items-center space-y-2 mb-4 space-x-0 md:space-x-4 md:flex-row flex-col">
-                <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="bg-gray-50 border border-gray-300 rounded-lg p-2.5 w-[300px] sm:w-[250px] text-sm"
-                    style={{
-                        width: "200px", // Adjust the dropdown box width
-                    }}
-                >
-                    <option value="">Choose a category</option>
-                    {categories.map((category) => (
-                        <option key={uuidv4()} value={category.name}>
-                            {category.name}
-                        </option>
-                    ))}
-                </select>
-                <button
-                    className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-2 md:py-2 rounded-lg shadow"
-                    onClick={handleQuizClick}
-                >
-                    Start Quiz
-                </button>
+            <div className="flex">
+                <div className="flex items-center space-y-2 mb-4 space-x-0 md:space-x-4 md:flex-row flex-col">
+                    <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        className="bg-gray-50 border border-gray-300 rounded-lg p-2.5 w-[300px] sm:w-[250px] text-sm"
+                        style={{
+                            width: "200px", // Adjust the dropdown box width
+                        }}
+                    >
+                        <option value="">Choose a category</option>
+                        {categories.map((category) => (
+                            <option key={uuidv4()} value={category.name}>
+                                {category.name}
+                            </option>
+                        ))}
+                    </select>
+                    <button
+                        className="bg-[#7847b8] hover:bg-[#8854c0] text-white px-4 py-2 md:py-2 rounded-lg shadow"
+                        onClick={handleQuizClick}
+                    >
+                        Start Quiz
+                    </button>
+                </div>
+                <div className="filter flex items-center space-x-2 ml-auto ">
+                    <span>
+                        <FaFilter className="text-gray-500" />
+                    </span>
+                    <input
+                        type="text"
+                        placeholder="Filter by category..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-[20vw] mb-4 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
             </div>
-
-            <input
-                type="text"
-                placeholder="Search by category..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="mb-4 p-2 border rounded-lg w-full focus:ring-2 focus:ring-blue-500"
-            />
 
             <div className="overflow-x-auto rounded-lg shadow bg-white">
                 <table className="min-w-full text-sm text-gray-700">
