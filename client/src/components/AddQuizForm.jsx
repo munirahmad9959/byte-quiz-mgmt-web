@@ -39,7 +39,7 @@ const AddQuizForm = ({ setShowSidebar, setNavDropDown }) => {
                     }
                 });
         } else {
-            toast.warn("Please select a subject to take quiz first!");
+            toast.warn("Please select a subject or category first!");
         }
     };
 
