@@ -118,8 +118,8 @@ export const fetchQuizCategories = async (token, setCategories, dispatch) => {
 
 
 export const ApiClient = axios.create({
-    baseURL: 'https://localhost:7093/api', // Base URL for your API
-    timeout: 5000, // Optional: request timeout
+    baseURL: 'https://localhost:7093/api', 
+    timeout: 5000, 
     headers: {
         'Content-Type': 'application/json',
     },

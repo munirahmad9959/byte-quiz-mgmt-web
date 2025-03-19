@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid'; // Import uuid
+import { v4 as uuidv4 } from 'uuid';
 import { ApiClient, downloadPdf, fetchQuizCategories } from '../../utils';
 import { FaFilter } from 'react-icons/fa';
 import { ToastContainer } from 'react-toastify';

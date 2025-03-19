@@ -12,11 +12,11 @@ const Navbar = () => {
 
     return (
         <div className='bg-white fixed w-screen left-0 top-0 z-[999]'>
-            <div className='flex justify-between items-center h-[90px] max-w-full mr-2 md:mr-10 md:ml-3'>
-                <div className="flex items-center space-x-5 w-1/2">
-                    <a href="/"><img src="./images/byteQuiz.png" alt="logo" className="w-[170px] md:w-[200px] cursor-pointer" /></a>
+            <div className='flex justify-between items-center h-[90px] mr-2 md:mr-10 md:ml-3'>
+                <div className="flex items-center space-x-5 max-w-[70%]">
+                    <a href="/"><img src="./images/byteQuiz.png" alt="logo" className="w-[170px] md:w-[180px] cursor-pointer" /></a>
 
-                    <div className='hidden md:block items-center md:whitespace-nowrap'>
+                    <div className='hidden md:block items-center'>
                         <a href="#home" className="text-[#090909] hover:text-[#8854c0] transition duration-300 hover:bg-[#efe5ff] px-4 py-3 rounded-lg">For Schools</a>
                         <a href="#about" className="text-[#090909] hover:text-[#8854c0] transition duration-300 hover:bg-[#efe5ff] px-4 py-3 rounded-lg">Plans</a>
                         <a href="#services" className="text-[#090909] hover:text-[#8854c0] transition duration-300 hover:bg-[#efe5ff] px-4 py-3 rounded-lg">Solutions</a>

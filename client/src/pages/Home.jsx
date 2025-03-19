@@ -336,7 +336,7 @@ const Home = () => {
 
       {/* After testimal grid background */}
       <motion.div
-        className="lastSection flex w-[90vw] md:w-[85vw] mt-14 md:mt-20 mx-auto bg-[#E2D1FF] h-[420px] rounded-3xl"
+        className="lastSection flex w-[90vw] md:w-[85vw] mt-14 md:mt-20 mx-auto bg-[#E2D1FF] h-[420px] rounded-3xl overflow-hidden"
         initial="hidden"
         animate="visible"
         exit="exit"
