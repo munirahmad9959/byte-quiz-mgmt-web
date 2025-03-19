@@ -9,6 +9,9 @@ const Navbar = () => {
     const handleClick = () => {
         navigate('/login');
     }
+    const handleregisterclick = () => {
+        navigate('/register');
+    }
 
     return (
         <div className='bg-white fixed w-screen left-0 top-0 z-[999]'>
@@ -35,7 +38,7 @@ const Navbar = () => {
                     >
                         <FiMenu className="text-2xl text-[#5D2057]" />
                     </button>
-                    <button className='text-white bg-[#8854c0] px-4 py-2 rounded-lg transition duration-200 hover:bg-[#6a3da5] hidden md:flex items-center'>Sign up</button>
+                    <button className='text-white bg-[#8854c0] px-4 py-2 rounded-lg transition duration-200 hover:bg-[#6a3da5] hidden md:flex items-center' onClick={handleregisterclick}>Sign up</button>
                 </nav>
             </div>
         </div>

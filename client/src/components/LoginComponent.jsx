@@ -97,7 +97,7 @@ const LoginComponent = () => {
                             type="submit"
                             className="w-full bg-[#8854c0] text-white py-2 rounded-lg hover:bg-[#6a3da5] focus:ring-4 focus:ring-blue-300"
                         >
-                            Submit
+                            Login
                         </button>
 
                         <div className="separator h-[1px] bg-gray-400 my-5" />
